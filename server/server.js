@@ -1,6 +1,9 @@
-// Load environment variables from .env file
 import dotenv from 'dotenv';
-dotenv.load();
+
+// Load environment variables from .env file in devo
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.load();
+}
 
 // Validate environment variables successfully loaded
 const requiredVars = [
@@ -10,7 +13,7 @@ const requiredVars = [
 
 for (const rv of requiredVars) {
   if (!process.env[rv]) {
-    throw new Error(`${rv} not specified in the .env configuration file`);
+    throw new Error(`${rv} not specified in the .env configuration file or as env variable`);
   }
 }
 
