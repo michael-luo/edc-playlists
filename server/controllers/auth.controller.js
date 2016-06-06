@@ -50,8 +50,14 @@ const setUpPassport = (passport) => {
           return done(err, newUser);
         });
       } else {
-        // User already exists
-        return done(err, user);
+        // User already exists, update the access token
+        user.accessToken = accessToken;
+        user.refreshToken = refreshToken;
+
+        user.save((err) => {
+          if (err) console.log(err);
+          return done(err, user);
+        });
       }
     });
   };
