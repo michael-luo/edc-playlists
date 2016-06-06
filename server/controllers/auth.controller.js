@@ -3,7 +3,7 @@ import passportSpotify from 'passport-spotify';
 
 const SpotifyStrategy = passportSpotify.Strategy;
 
-const REDIRECT_URI = process.env.redirectUri || 'http://localhost:8000/api/auth/spotify/callback';
+const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:8000/api/auth/spotify/callback';
 const scopes = ['user-read-private', 'user-read-email', 'playlist-modify-public'];
 
 const setUpPassport = (passport) => {
@@ -60,7 +60,7 @@ const setUpPassport = (passport) => {
   passport.use(new SpotifyStrategy({
     clientID: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    callbackURL: REDIRECT_URI,
+    callbackURL: redirectUri,
   }, spotifyStrategyCallback));
 };
 
