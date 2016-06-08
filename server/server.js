@@ -19,7 +19,6 @@ for (const rv of requiredVars) {
 
 import Express from 'express';
 import expressSession from 'express-session';
-import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import path from 'path';
@@ -52,19 +51,11 @@ import Helmet from 'react-helmet';
 import routes from '../shared/routes';
 import { fetchComponentData } from './util/fetchData';
 import apiRoutes from './routes/api.routes';
-import dummyData from './dummyData';
 import serverConfig from './config';
 
-// MongoDB Connection
-mongoose.connect(serverConfig.mongoURL, (error) => {
-  if (error) {
-    console.error('Please make sure Mongodb is installed and running!'); // eslint-disable-line no-console
-    throw error;
-  }
-
-  // feed some dummy data in DB.
-  dummyData();
-});
+// Connect to MongoDB
+import connectToMongoDb from './connectToMongoDb';
+connectToMongoDb(serverConfig.mongoURL);
 
 const secret = 'edm cat';
 
