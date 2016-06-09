@@ -33,6 +33,7 @@ const userSchema = new Schema({
   profileUrl: { type: 'String', required: true },
   photos: [{ type: 'String', required: true }],
   email: { type: 'String', required: true },
+  country: { type: 'String', required: true },
   spotify: {
     id: { type: 'String', required: true }
   },

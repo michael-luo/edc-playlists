@@ -41,6 +41,7 @@ const setUpPassport = (passport) => {
           profileUrl: profile.profileUrl,
           photos: profile.photos,
           email: profile.emails[0].value,
+          country: profile.country,
           // Future searches for User.findOne({'spotify.id': profile.id } will match because of this
           spotify: profile._json,
         });
