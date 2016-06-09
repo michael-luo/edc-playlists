@@ -12,10 +12,14 @@ export default function connectToMongoDb(connectionString) {
 
   const connection = mongoose.connection;
   console.log(`Connected to MongoDB ${connection.host}:${connection.port}`);
-    // feed some dummy data in DB.
-    dummyData();
-    initEvents();
+    // Feed some dummy data in DB in devo.
+    if (process.env.NODE_ENV !== 'production') {
+      dummyData();
+    }
 
+    if (process.env.POPULATE_EVENTS === 'enabled') {
+      initEvents();
+    }
   });
 
   return mongoose;

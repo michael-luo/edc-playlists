@@ -1,9 +1,10 @@
 import User from '../models/user';
 import passportSpotify from 'passport-spotify';
+import serverConfig from '../config';
 
 const SpotifyStrategy = passportSpotify.Strategy;
 
-const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:8000/api/auth/spotify/callback';
+const redirectUri = serverConfig.spotifyRedirectURL;
 const scopes = ['user-read-private', 'user-read-email', 'playlist-modify-public'];
 
 const setUpPassport = (passport) => {
