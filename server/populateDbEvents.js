@@ -97,6 +97,7 @@ function _populate(data) {
   _processMusicEvents(events, savedArtistModelsPromise);
 }
 
+// Modify the artists list of each event before saving it
 function _processMusicEvents(events, savedArtistModelsPromise) {
   savedArtistModelsPromise
   .then((savedArtistModels) => {

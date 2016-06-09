@@ -10,7 +10,7 @@ const data = {
       name: 'Electronic Daisy Carnival',
       year: '2016',
       days: 3,
-      ref: 'EDC 2016',
+      ref: 'EDC',
       artists: [
         'Seven Lions',
         'Adventure Club'
