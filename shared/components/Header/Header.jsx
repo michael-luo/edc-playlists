@@ -15,7 +15,7 @@ class Header extends Component {
           </h1>
           {
             this.context.router.isActive('/', true)
-              ? <a className="add-post-button" href="#" onClick={this.props.onClick}>Generate Playlist</a>
+              ? <a className="add-post-button" href="#" onClick={this.props.onClick}>+ Playlist</a>
               : null
           }
           {

@@ -100,12 +100,12 @@ function _populate(data) {
 // Modify the artists list of each event before saving it
 function _processMusicEvents(events, savedArtistModelsPromise) {
   savedArtistModelsPromise
-  .then((savedArtistModels) => {
-    console.log(`Successfully saved ${savedArtistModels.length} artists to DB
-      - [${_extractArtistNames(savedArtistModels)}]`);
-    _replaceEventsArtistsWithObjectId(events, savedArtistModels);
-    _saveEvents(events);
-  });
+    .then((savedArtistModels) => {
+      console.log(`Successfully saved ${savedArtistModels.length} artists to DB
+        - [${_extractArtistNames(savedArtistModels)}]`);
+      _replaceEventsArtistsWithObjectId(events, savedArtistModels);
+      _saveEvents(events);
+    });
 }
 
 // Save the event to the database;
@@ -155,10 +155,7 @@ function _processArtistListIntoDatabase(artistArray) {
     .then((foundArtists) => {
       console.log(`Successfully found ${foundArtists.length} artists from search results
         - [${_extractArtistNames(foundArtists)}]`);
-      return _convertArtistsToModels(foundArtists);
-    })
-    .then((newArtistModels) => {
-      return _convertArtistModelsToSaveArtistPromises(newArtistModels);
+      return _convertArtistsToSavedModelsPromises(foundArtists);
     })
     .then((saveArtistModelPromises) => {
       return Promises.all(saveArtistModelPromises);
@@ -202,17 +199,30 @@ function _extractArtistsFromSearchResults(artistSearchResults, artistArray) {
   return foundArtists;
 }
 
-// Convert Spotify artist objects into Mongoose models
-function _convertArtistsToModels(spotifyArtists) {
-  return _.map(spotifyArtists, (spotifyArtist) => {
+// Convert Spotify artist objects into saved db models
+function _convertArtistsToSavedModelsPromises(spotifyArtists) {
+  const artistBodies = _.map(spotifyArtists, (spotifyArtist) => {
     if (!spotifyArtist.id) {
       return null;
     }
-    return new Artist({
+    return {
       id: spotifyArtist.id,
       name: spotifyArtist.name,
-      genres: spotifyArtists.genres,
+      genres: spotifyArtist.genres,
       tracks: [],
+    };
+  });
+
+  // Upsert artists
+  return _.map(artistBodies, (artistBody) => {
+    return new Promises((resolve, reject) => {
+      Artist.findOneAndUpdate({ id: artistBody.id }, artistBody, { upsert: true, new: true },
+        (err, foundArtist) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(foundArtist);
+        });
     });
   });
 }
@@ -237,16 +247,7 @@ function _getArtistPromise(artistName) {
 
 // Return a promise to search for artist Spotify object
 function _convertArtistModelsToSaveArtistPromises(newArtistModels) {
-  return _.map(newArtistModels, (model) => {
-    return new Promises((resolve, reject) => {
-      model.save((err, saved) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(saved);
-      });
-    });
-  });
+
 }
 
 // Spotify returns multiple artists for a given search

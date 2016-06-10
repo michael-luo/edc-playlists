@@ -5,6 +5,8 @@
  * redirected to the login page.
  */
 export function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login');
+  if (req.isAuthenticated() && req.user && req.user.accessToken) {
+    return next();
+  }
+  res.redirect('/');
 }

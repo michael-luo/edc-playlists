@@ -13,7 +13,8 @@ const data = {
       ref: 'EDC',
       artists: [
         'Seven Lions',
-        'Adventure Club'
+        'Adventure Club',
+        'Armin van Buuren',
       ],
     }
   ],
