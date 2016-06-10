@@ -54,9 +54,19 @@ const user = (state = {}, action) => {
   }
 };
 
+const events = (state = [], action) => {
+  switch (action.type) {
+    case ActionTypes.ADD_EVENTS:
+      return action.events;
+    default:
+      return state;
+  }
+};
+
 const musicApp = combineReducers({
   data,
   user,
+  events,
 });
 
 export default musicApp;

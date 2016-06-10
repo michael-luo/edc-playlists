@@ -96,7 +96,7 @@ const renderFullPage = (html, initialState) => {
         <link rel="shortcut icon" href="http://res.cloudinary.com/hashnode/image/upload/v1455629445/static_imgs/mern/mern-favicon-circle-fill.png" type="image/png" />
       </head>
       <body>
-        <div id="root">${html}</div>
+        <div id="root"><div>${html}</div></div>
         <script>
           window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
         </script>
@@ -134,6 +134,7 @@ app.use((req, res, next) => {
         post: {},
       },
       user: {},
+      events: [],
     };
 
     const store = configureStore(initialState);

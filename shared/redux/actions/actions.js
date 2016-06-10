@@ -105,10 +105,23 @@ export function setAuthenticatedUser(user) {
 
 export function fetchAuthenticatedUser() {
   return (dispatch) => {
-    return fetch(`${baseURL}/api/user/self`, ENABLE_SEND_SESSION).
-      then((response) => response.json()).
-      then((response) => {
-        dispatch(setAuthenticatedUser(response.data));
-      });
+    return fetch(`${baseURL}/api/user/self`, ENABLE_SEND_SESSION)
+      .then((response) => response.json())
+      .then((response) => dispatch(setAuthenticatedUser(response.data)));
   };
+}
+
+export function addEvents(events) {
+  return {
+    type: ActionTypes.ADD_EVENTS,
+    events
+  };
+}
+
+export function fetchMusicEvents() {
+  return (dispatch) => {
+    return fetch(`${baseURL}/api/events`)
+      .then((response) => response.json())
+      .then((response) => dispatch(addEvents(response.data)));
+  }
 }

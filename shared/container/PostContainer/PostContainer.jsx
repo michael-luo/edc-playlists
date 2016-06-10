@@ -15,6 +15,7 @@ class PostContainer extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.add = this.add.bind(this);
     this.props.dispatch(Actions.fetchAuthenticatedUser());
+    this.props.dispatch(Actions.fetchMusicEvents());
   }
 
   handleClick(e) {
@@ -43,8 +44,8 @@ class PostContainer extends Component {
       <div>
         <Header onClick={this.handleClick} user={this.props.user}/>
         <div className="container">
-          <PostCreateView addPost={this.add}
-            showAddPost={this.state.showAddPost}/>
+          <PostCreateView addPost={this.add} showAddPost={this.state.showAddPost}
+            events={this.props.events}/>
           <PostListView posts={this.props.posts}/>
         </div>
         <Footer />
@@ -54,8 +55,7 @@ class PostContainer extends Component {
 }
 
 PostContainer.needs = [
-  () => { return Actions.fetchPosts(); },
-  () => { return Actions.fetchAuthenticatedUser(); }
+  () => { return Actions.fetchPosts(); }
 ];
 
 PostContainer.contextTypes = {
@@ -65,7 +65,8 @@ PostContainer.contextTypes = {
 function mapStateToProps(store) {
   return {
     posts: store.data.posts,
-    user: store.user
+    user: store.user,
+    events: store.events,
   };
 }
 
