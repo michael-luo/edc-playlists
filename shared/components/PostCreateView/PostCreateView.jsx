@@ -59,7 +59,7 @@ class PostCreateView extends Component {
       <div className={cls}>
         <div className="form-content">
           <h2 className="form-title">Create New Playlist</h2>
-          <Select name="form-field-name" value={this.state.defaultEvent}
+          <Select name="event-name" value={this.state.defaultEvent}
             options={this.getSelectEventOptions()} onChange={this.onSelectChange}/>
           <input placeholder="Artist's Name" className="form-field" ref="name"/>
           <input placeholder="Playlist Title" className="form-field" ref="title"/>

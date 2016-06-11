@@ -11,7 +11,9 @@ class Header extends Component {
       <div className="header">
         <div className="header-content">
           <h1 className="site-title">
-            <Link to="/" onClick={this.props.handleLogoClick}>Discover</Link>
+            <Link to="/" onClick={this.props.handleLogoClick}>
+              <img src="/img/header-logo.png"/>
+            </Link>
           </h1>
           {
             this.context.router.isActive('/', true)
