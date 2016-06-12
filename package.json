@@ -1,5 +1,5 @@
 {
-  "name": "edc-playlists",
+  "name": "discover-edm",
   "version": "1.0.0",
   "description": "Web application for discovering electronic dance music",
   "scripts": {
@@ -21,9 +21,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/michael-luo/edc-playlists"
+    "url": "git+https://github.com/michael-luo/discover-edm"
   },
-  "homepage": "https://github.com/michael-luo/edc-playlists#readme",
+  "homepage": "https://github.com/michael-luo/discover-edm#readme",
   "author": "Michael Luo <miczluo@gmail.com>",
   "dependencies": {
     "babel-core": "^6.4.5",
