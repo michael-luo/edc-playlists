@@ -9,6 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
 const requiredVars = [
   'SPOTIFY_CLIENT_ID',
   'SPOTIFY_CLIENT_SECRET',
+  'POPULATE_EVENTS',
 ];
 
 for (const rv of requiredVars) {

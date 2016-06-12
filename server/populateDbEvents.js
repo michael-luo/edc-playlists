@@ -245,11 +245,6 @@ function _getArtistPromise(artistName) {
   return spotifyApi.searchArtists(artistName);
 }
 
-// Return a promise to search for artist Spotify object
-function _convertArtistModelsToSaveArtistPromises(newArtistModels) {
-
-}
-
 // Spotify returns multiple artists for a given search
 function _findArtistAmongPossibleArtists(artists, target) {
   if (!artists || !target) {
