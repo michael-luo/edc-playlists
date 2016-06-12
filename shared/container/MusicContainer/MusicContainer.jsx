@@ -1,35 +1,54 @@
 import React, { PropTypes, Component } from 'react';
-import PostListView from '../PostListView/PostListView';
-import PostCreateView from '../../components/PostCreateView/PostCreateView';
+import PlaylistListView from '../PlaylistListView/PlaylistListView';
+import PlaylistCreateView from '../../components/PlaylistCreateView/PlaylistCreateView';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { connect } from 'react-redux';
 import * as Actions from '../../redux/actions/actions';
 
-class PostContainer extends Component {
+const RECENT_PLAYLISTS = 'recentPlaylists';
+const CREATE_PLAYLIST = 'createPlaylist';
+
+class MusicContainer extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      showAddPost: false
+      currentView: RECENT_PLAYLISTS
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleLogoClick = this.handleLogoClick.bind(this);
     this.add = this.add.bind(this);
     this.props.dispatch(Actions.fetchAuthenticatedUser());
     this.props.dispatch(Actions.fetchMusicEvents());
   }
 
   handleClick(e) {
-    this.setState({
-      showAddPost: !this.state.showAddPost,
-    });
+    switch (this.state.currentView) {
+      case RECENT_PLAYLISTS:
+        this.setState({
+          currentView: CREATE_PLAYLIST,
+        });
+        break;
+      case CREATE_PLAYLIST:
+        this.setState({
+          currentView: RECENT_PLAYLISTS,
+        });
+        break;
+    }
 
     e.preventDefault();
+  }
+
+  handleLogoClick() {
+    this.setState({
+      currentView: RECENT_PLAYLISTS,
+    });
   }
 
   add(name, title, content) {
     this.props.dispatch(Actions.addPostRequest({ name, title, content }));
     this.setState({
-      showAddPost: false,
+      currentView: RECENT_PLAYLISTS,
     });
   }
 
@@ -42,11 +61,19 @@ class PostContainer extends Component {
   render() {
     return (
       <div>
-        <Header onClick={this.handleClick} user={this.props.user}/>
+        <Header onClick={this.handleClick} handleLogoClick={this.handleLogoClick}
+          user={this.props.user}/>
         <div className="container">
-          <PostCreateView addPost={this.add} showAddPost={this.state.showAddPost}
-            events={this.props.events}/>
-          <PostListView posts={this.props.posts}/>
+          {
+            this.state.currentView === CREATE_PLAYLIST
+            ? <PlaylistCreateView addPost={this.add} events={this.props.events}/>
+            : null
+          }
+          {
+            this.state.currentView === RECENT_PLAYLISTS
+            ? <PlaylistListView posts={this.props.posts}/>
+            : null
+          }
         </div>
         <Footer />
       </div>
@@ -54,11 +81,11 @@ class PostContainer extends Component {
   }
 }
 
-PostContainer.needs = [
+MusicContainer.needs = [
   () => { return Actions.fetchPosts(); }
 ];
 
-PostContainer.contextTypes = {
+MusicContainer.contextTypes = {
   router: React.PropTypes.object,
 };
 
@@ -70,7 +97,7 @@ function mapStateToProps(store) {
   };
 }
 
-PostContainer.propTypes = {
+MusicContainer.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
@@ -79,4 +106,4 @@ PostContainer.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(PostContainer);
+export default connect(mapStateToProps)(MusicContainer);

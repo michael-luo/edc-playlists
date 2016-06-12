@@ -2,11 +2,17 @@ import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
 import _ from 'underscore';
 
-class PostCreateView extends Component {
+class PlaylistCreateView extends Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {};
 
-    this.state = { defaultEvent: '' };
+    const events = props.events;
+    if (events && events.length > 0 && events[0].ref && events[0].year) {
+      this.state.defaultEvent = events[0].ref.toLowerCase() + events[0].year;
+    } else {
+      this.state.defaultEvent = '';
+    }
 
     this.addPost = this.addPost.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
@@ -26,18 +32,6 @@ class PostCreateView extends Component {
     this.setState({ defaultEvent: val });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const events = nextProps.events;
-
-    if ((!this.events || this.events && this.events.length === 0) &&
-        events && events.length > 0 && events[0].ref && events[0].year) {
-
-      this.setState({
-        defaultEvent: (events[0].ref.toLowerCase() + events[0].year)
-      });
-    }
-  }
-
   getSelectEventOptions() {
     const events = this.props.events;
 
@@ -54,9 +48,8 @@ class PostCreateView extends Component {
   }
 
   render() {
-    const cls = `form ${(this.props.showAddPost ? 'appear' : '')}`;
     return (
-      <div className={cls}>
+      <div className='form appear'>
         <div className="form-content">
           <h2 className="form-title">Create New Playlist</h2>
           <Select name="event-name" value={this.state.defaultEvent}
@@ -71,9 +64,8 @@ class PostCreateView extends Component {
   }
 }
 
-PostCreateView.propTypes = {
+PlaylistCreateView.propTypes = {
   addPost: PropTypes.func.isRequired,
-  showAddPost: PropTypes.bool.isRequired,
   events: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     year: PropTypes.number.isRequired,
@@ -86,4 +78,4 @@ PostCreateView.propTypes = {
   })).isRequired,
 };
 
-export default PostCreateView;
+export default PlaylistCreateView;

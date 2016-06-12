@@ -5,7 +5,7 @@ import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import Helmet from 'react-helmet';
 
-class PostDetailView extends Component {
+class PlaylistDetailView extends Component {
 
   constructor(props, context) {
     super(props, context);
@@ -43,15 +43,15 @@ class PostDetailView extends Component {
   }
 }
 
-PostDetailView.need = [(params) => {
+PlaylistDetailView.need = [(params) => {
   return Actions.getPostRequest.bind(null, params.slug)();
 }];
 
-PostDetailView.contextTypes = {
+PlaylistDetailView.contextTypes = {
   router: React.PropTypes.object,
 };
 
-PostDetailView.propTypes = {
+PlaylistDetailView.propTypes = {
   post: PropTypes.shape({
     name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
@@ -69,4 +69,4 @@ function mapStateToProps(store) {
   };
 }
 
-export default connect(mapStateToProps)(PostDetailView);
+export default connect(mapStateToProps)(PlaylistDetailView);

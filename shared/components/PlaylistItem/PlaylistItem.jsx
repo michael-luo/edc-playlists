@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-function PostListItem(props) {
+function PlaylistItem(props) {
   return (
     <div className="single-post">
       <h3 className="post-title ">
@@ -17,7 +17,7 @@ function PostListItem(props) {
   );
 }
 
-PostListItem.propTypes = {
+PlaylistItem.propTypes = {
   post: PropTypes.shape({
     name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
@@ -30,4 +30,4 @@ PostListItem.propTypes = {
   onDelete: PropTypes.func.isRequired,
 };
 
-export default PostListItem;
+export default PlaylistItem;

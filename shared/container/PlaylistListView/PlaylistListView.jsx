@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react';
-import PostListItem from '../../components/PostListItem/PostListItem';
+import PlaylistItem from '../../components/PlaylistItem/PlaylistItem';
 import { connect } from 'react-redux';
 import * as Actions from '../../redux/actions/actions';
 
-function PostListView(props) {
+function PlaylistListView(props) {
   return (
     <div className="listView">
       {
         props.posts.map((post, i) => (
-          <PostListItem post={post} key={i}
+          <PlaylistItem post={post} key={i}
           onClick={function handleClick() {
             props.dispatch(Actions.addSelectedPost(post));
           }}
@@ -24,7 +24,7 @@ function PostListView(props) {
   );
 }
 
-PostListView.propTypes = {
+PlaylistListView.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
@@ -35,4 +35,4 @@ PostListView.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-export default connect()(PostListView);
+export default connect()(PlaylistListView);

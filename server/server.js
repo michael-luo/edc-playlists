@@ -122,7 +122,7 @@ const renderFullPage = (html, initialState) => {
 
         <link rel="stylesheet" href=${cssPath} />
         <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'/>
-        <link rel="shortcut icon" href="http://res.cloudinary.com/hashnode/image/upload/v1455629445/static_imgs/mern/mern-favicon-circle-fill.png" type="image/png" />
+        <link rel="shortcut icon" href="http://i.imgur.com/5hJBWeR.png" type="image/png" />
       </head>
       <body>
         <div id="root"><div>${html}</div></div>
