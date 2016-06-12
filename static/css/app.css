@@ -257,7 +257,10 @@ body {
   cursor: default;
   pointer-events: none;
 }
+
 .Select-control {
+  width: 100%;
+  margin-bottom: 16px;
   background-color: #fff;
   border-color: #d9d9d9 #ccc #b3b3b3;
   border-radius: 4px;
@@ -269,7 +272,6 @@ body {
   outline: none;
   overflow: hidden;
   position: relative;
-  width: 100%;
 }
 .Select-control:hover {
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
@@ -416,7 +418,7 @@ body {
 .Select-arrow {
   border-color: #999 transparent transparent;
   border-style: solid;
-  border-width: 5px 5px 2.5px;
+  border-width: 7px 5px 2px;
   display: inline-block;
   height: 0;
   width: 0;
