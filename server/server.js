@@ -79,9 +79,12 @@ app.use(expressSession({
   secret,
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
+    ttl: 14 * 24 * 60 * 60, // = 14 days. Default
+    autoRemove: 'native', // Default
+    touchAfter: 24 * 3600, // time period in seconds
   }),
-  resave: true,
-  saveUninitialized: true,
+  resave: false, // Don't save session if unmodified
+  saveUninitialized: false, // Don't create session until something stored
 }));
 
 // Initilize passport with persistent login sessions
