@@ -16,6 +16,16 @@ const data = {
         'Adventure Club',
         'Armin van Buuren',
       ],
+    },
+    {
+      name: 'Hard Summer',
+      year: '2016',
+      days: 2,
+      ref: 'HS',
+      artists: [
+        'Porter Robinson',
+        'Tchami',
+      ]
     }
   ],
 };

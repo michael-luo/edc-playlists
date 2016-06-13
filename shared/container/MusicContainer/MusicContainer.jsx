@@ -17,7 +17,7 @@ class MusicContainer extends Component {
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleLogoClick = this.handleLogoClick.bind(this);
-    this.add = this.add.bind(this);
+    this.createPlaylist = this.createPlaylist.bind(this);
     this.props.dispatch(Actions.fetchAuthenticatedUser());
     this.props.dispatch(Actions.fetchMusicEvents());
   }
@@ -45,8 +45,8 @@ class MusicContainer extends Component {
     });
   }
 
-  add(name, title, content) {
-    this.props.dispatch(Actions.addPostRequest({ name, title, content }));
+  createPlaylist(title, artists) {
+    this.props.dispatch(Actions.createPlaylist(title, artists));
     this.setState({
       currentView: RECENT_PLAYLISTS,
     });
@@ -66,7 +66,7 @@ class MusicContainer extends Component {
         <div className="container">
           {
             this.state.currentView === CREATE_PLAYLIST
-            ? <PlaylistCreateView addPost={this.add} events={this.props.events}/>
+            ? <PlaylistCreateView createPlaylist={this.createPlaylist} events={this.props.events}/>
             : null
           }
           {

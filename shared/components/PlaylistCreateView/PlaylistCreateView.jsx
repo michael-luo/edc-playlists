@@ -1,6 +1,50 @@
 import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { WithContext as ReactTags } from 'react-tag-input';
 import _ from 'underscore';
+
+function _getFormattedEventName(event) {
+  return `${event.ref} ${event.year}`;
+}
+
+function _getArtistRows(events, _id) {
+  let artists = [];
+  if (!events || !_.isArray(events) || _.isEmpty(events)) {
+    return artists;
+  }
+  // Default to first event's artists if target not specified
+  if (!_id) {
+    return _getFormattedArtists(events[0].artists);
+  }
+
+  for (const event of events) {
+    if (event._id === _id) {
+      return _getFormattedArtists(event.artists);
+    }
+  }
+
+  return [];
+}
+
+function _getFormattedArtists(artists) {
+  return _.map(artists, (artist) => {
+    return {
+      id: artist.id,
+      artist: artist.name,
+      genres: artist.genres.sort().join(', '),
+    };
+  });
+}
+
+const selectArtistRowProp = (onSelect) => {
+  return {
+    mode: 'checkbox',
+    clickToSelect: true,
+    bgColor: 'rgb(52, 152, 219)',
+    onSelect,
+  };
+};
 
 class PlaylistCreateView extends Component {
   constructor(props, context) {
@@ -8,31 +52,34 @@ class PlaylistCreateView extends Component {
     this.state = {};
 
     const events = props.events;
-    if (events && events.length > 0 && events[0].ref && events[0].year) {
-      this.state.defaultEvent = events[0].ref.toLowerCase() + events[0].year;
+    if (events && events.length > 0) {
+      this.state.currentEvent = events[0]._id;
     } else {
-      this.state.defaultEvent = '';
+      this.state.currentEvent = '';
     }
 
-    this.addPost = this.addPost.bind(this);
-    this.onSelectChange = this.onSelectChange.bind(this);
+    this.state.artistRows = _getArtistRows(this.props.events);
+    this.state.selectedArtists = [];
+
+    this.createPlaylist = this.createPlaylist.bind(this);
+    this.onEventSelectChange = this.onEventSelectChange.bind(this);
+    this.onArtistRowSelect = this.onArtistRowSelect.bind(this);
   }
 
-  addPost() {
-    const nameRef = this.refs.name;
-    const titleRef = this.refs.title;
-    const contentRef = this.refs.content;
-    if (nameRef.value && titleRef.value && contentRef.value) {
-      this.props.addPost(nameRef.value, titleRef.value, contentRef.value);
-      nameRef.value = titleRef.value = contentRef.value = '';
-    }
+  createPlaylist() {
+    const titleRef = this.refs.playlistTitle;
+    this.props.createPlaylist(titleRef.value, this.state.selectedArtists);
+    this.state.selectedArtists = [];
   }
 
-  onSelectChange(val) {
-    this.setState({ defaultEvent: val });
+  onEventSelectChange(val) {
+    this.setState({
+      currentEvent: val.value,
+      artistRows: _getArtistRows(this.props.events, val.value),
+    });
   }
 
-  getSelectEventOptions() {
+  getEventSelectOptions() {
     const events = this.props.events;
 
     if (!events || events.length === 0) {
@@ -41,23 +88,86 @@ class PlaylistCreateView extends Component {
 
     return _.map(events, (event) => {
       return {
-        value: (event.ref.toLowerCase() + event.year),
+        value: event._id,
         label: `${event.name} ${event.year}`,
       };
     });
   }
 
+  onArtistRowSelect(row, isSelected) {
+    if (isSelected) {
+      this.setState({
+        selectedArtists: [
+          ...this.state.selectedArtists,
+          {
+            id: row.id,
+            text: row.artist,
+          }
+        ],
+      });
+    } else {
+      this.setState({
+        selectedArtists: _.filter(this.state.selectedArtists, (artist) => artist.id !== row.id),
+      });
+    }
+  }
+
   render() {
     return (
-      <div className='form appear'>
-        <div className="form-content">
-          <h2 className="form-title">Create New Playlist</h2>
-          <Select name="event-name" value={this.state.defaultEvent}
-            options={this.getSelectEventOptions()} onChange={this.onSelectChange}/>
-          <input placeholder="Artist's Name" className="form-field" ref="name"/>
-          <input placeholder="Playlist Title" className="form-field" ref="title"/>
-          <textarea placeholder="Playlist Tracks" className="form-field" ref="content"></textarea>
-          <a className="post-submit-button align-right" href="#" onClick={this.addPost}>Submit</a>
+      <div>
+        <div className='form appear'>
+          <div className="form-content">
+            <h2 className="form-title">Create New Playlist</h2>
+
+            <Select
+              name="event-name"
+              value={this.state.currentEvent}
+              options={this.getEventSelectOptions()}
+              onChange={this.onEventSelectChange}/>
+
+            <BootstrapTable
+              data={this.state.artistRows}
+              striped={true}
+              hover={true}
+              search={true}
+              multiColumnSearch={true}
+              searchPlaceholder="Search all artists and genres"
+              selectRow={selectArtistRowProp(this.onArtistRowSelect)}
+              >
+              <TableHeaderColumn
+                hidden={true}
+                dataField="id"
+                isKey={true}>
+                ID
+              </TableHeaderColumn>
+
+              <TableHeaderColumn
+                dataField="artist"
+                dataSort={true}>
+                Artist
+              </TableHeaderColumn>
+
+              <TableHeaderColumn
+                dataField="genres"
+                dataSort={true}>
+                Genres
+              </TableHeaderColumn>
+            </BootstrapTable>
+
+            <ReactTags
+              tags={this.state.selectedArtists}
+              readOnly={true}
+              handleDelete={() => {}}
+              handleAddition={() => {}}
+            />
+
+            <input defaultValue={_getFormattedEventName(this.props.events[0])} placeholder="Name Your Playlist" className="form-control form-field" ref="playlistTitle"/>
+
+            <input placeholder="Artist's Name" className="form-control form-field" ref="name"/>
+            <input placeholder="Playlist Title" className="form-control form-field" ref="title"/>
+            <textarea placeholder="Playlist Tracks" className="form-control form-field" ref="content"></textarea>
+            <a className="post-submit-button align-right" href="#" onClick={this.createPlaylist}>Generate</a>
+          </div>
         </div>
       </div>
     );
@@ -65,7 +175,7 @@ class PlaylistCreateView extends Component {
 }
 
 PlaylistCreateView.propTypes = {
-  addPost: PropTypes.func.isRequired,
+  createPlaylist: PropTypes.func.isRequired,
   events: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     year: PropTypes.number.isRequired,

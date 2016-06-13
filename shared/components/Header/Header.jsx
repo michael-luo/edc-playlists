@@ -10,14 +10,14 @@ class Header extends Component {
     return (
       <div className="header">
         <div className="header-content">
-          <h1 className="site-title">
+          <span className="site-title">
             <Link to="/" onClick={this.props.handleLogoClick}>
-              <img src="/img/header-logo.png"/>
+              <img className="header-logo" src="/img/header-logo-white.png"/>
             </Link>
-          </h1>
+          </span>
           {
             this.context.router.isActive('/', true)
-              ? <a className="add-post-button" href="#" onClick={this.props.onClick}>+ Playlist</a>
+              ? <span className="add-post-button" href="#" onClick={this.props.onClick}>+ Playlist</span>
               : null
           }
           {

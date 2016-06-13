@@ -63,10 +63,20 @@ const events = (state = [], action) => {
   }
 };
 
+const playlist = (state = {}, action) => {
+  switch (action.type) {
+    case ActionTypes.ADD_PLAYLIST:
+      return action.playlist;
+    default:
+      return state;
+  }
+}
+
 const musicApp = combineReducers({
   data,
   user,
   events,
+  playlist,
 });
 
 export default musicApp;

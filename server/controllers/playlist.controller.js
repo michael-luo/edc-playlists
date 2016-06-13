@@ -8,19 +8,16 @@ const MAX_NUM_TOP_SONGS = 10;
 
 // Given a list of artist names, look up the top songs of the artist and create a new playlist for user
 export function generatePlaylist(req, res) {
+  // TODO: Create Spotify playlist
   const spotifyApi = _getSpotifyApi(req.user);
-  let artistIds = req.query.artists || '';
-  let numTopSongs = req.query.songsPerArtist || DEFAULT_NUM_TOP_SONGS;
-
+  let artistIds = req.body.artists || [];
+  let numTopSongs = req.body.songsPerArtist || DEFAULT_NUM_TOP_SONGS;
   // Validate input artist IDs
-  if (artistIds.trim().length === 0) {
-    return res.json({
-      err: 'artists query param cannot be empty'
+  if (!_.isArray(artistIds) || _.isEmpty(artistIds)) {
+    return res.status(400).json({
+      err: 'artists has to be a non-empty array'
     });
   }
-
-  // Convert artist1,artist2,artist3... into a list
-  artistIds = artistIds.trim().split(',');
 
   // Validate artists input
   if (artistIds.length > MAX_NUM_ARTISTS_PER_MUSIC_EVENT) {
@@ -34,10 +31,6 @@ export function generatePlaylist(req, res) {
   if (numTopSongs > MAX_NUM_TOP_SONGS || numTopSongs < 1) {
     numTopSongs = DEFAULT_NUM_TOP_SONGS;
   }
-
-  let playlist = {};
-  playlist['data'] = {};
-  playlist.data = artistIds;
 
   _getArtistTopTracksPromises(spotifyApi, artistIds, req.user.country)
     .then((data) => {

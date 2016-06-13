@@ -3,7 +3,8 @@ import { ENABLE_SEND_SESSION } from '../constants/constants';
 import Config from '../../../server/config';
 import fetch from 'isomorphic-fetch';
 
-const baseURL = typeof window === 'undefined' ? process.env.BASE_URL || (`http://localhost:${Config.port}`) : '';
+// const baseURL = typeof window === 'undefined' ? process.env.BASE_URL || (`http://localhost:${Config.port}`) : '';
+const baseURL = `http://localhost:${Config.port}`;
 
 export function addPost(post) {
   return {
@@ -124,4 +125,41 @@ export function fetchMusicEvents() {
       .then((response) => response.json())
       .then((response) => dispatch(addEvents(response.data)));
   }
+}
+
+export function createPlaylist(title, artists) {
+  // Build artist IDs from artists objects
+  let artistIds = [];
+  for (const artist of artists) {
+    artistIds.push(artist.id);
+  }
+
+  return (dispatch) => {
+    fetch(`${baseURL}/api/playlists`, {
+      method: 'post',
+      body: JSON.stringify({
+        artists: artistIds
+      }),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+      credentials: 'include',
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      dispatch(addPlaylist(res.data))
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  };
+}
+
+export function addPlaylist(playlist) {
+  return {
+    type: ActionTypes.ADD_PLAYLIST,
+    playlist,
+  };
 }
