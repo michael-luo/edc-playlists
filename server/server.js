@@ -19,7 +19,9 @@ for (const rv of requiredVars) {
 }
 
 import Express from 'express';
-import expressSession from 'express-session';
+
+
+
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import path from 'path';
@@ -58,7 +60,12 @@ import expressLogger from 'express-winston';
 
 // Connect to MongoDB
 import connectToMongoDb from './connectToMongoDb';
-connectToMongoDb(serverConfig.mongoURL);
+const mongoose = connectToMongoDb(serverConfig.mongoURL);
+
+// For session storage
+import expressSession from 'express-session';
+import connectMongo from 'connect-mongo';
+const MongoStore = connectMongo(expressSession);
 
 const secret = 'edm cat';
 
@@ -66,12 +73,17 @@ const secret = 'edm cat';
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(cookieParser(secret));
+
+// Use MongoDB for sessions
 app.use(expressSession({
   secret,
-  cookie: { maxAge: 1728000000 }, // 20 days
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+  }),
   resave: true,
   saveUninitialized: true,
 }));
+
 // Initilize passport with persistent login sessions
 app.use(passport.initialize());
 app.use(passport.session());
@@ -186,7 +198,7 @@ app.use((req, res, next) => {
 // Start app
 app.listen(serverConfig.port, (error) => {
   if (!error) {
-    console.log(`MERN is running on port: ${serverConfig.port}`); // eslint-disable-line
+    console.log(`Discover EDM is running on port: ${serverConfig.port}`); // eslint-disable-line
   }
 });
 
