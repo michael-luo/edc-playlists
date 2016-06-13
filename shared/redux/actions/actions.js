@@ -3,8 +3,7 @@ import { ENABLE_SEND_SESSION } from '../constants/constants';
 import Config from '../../../server/config';
 import fetch from 'isomorphic-fetch';
 
-// const baseURL = typeof window === 'undefined' ? process.env.BASE_URL || (`http://localhost:${Config.port}`) : '';
-const baseURL = `http://localhost:${Config.port}`;
+const baseURL = typeof window === 'undefined' ? process.env.BASE_URL || (`http://localhost:${Config.port}`) : '';
 
 export function addPost(post) {
   return {
