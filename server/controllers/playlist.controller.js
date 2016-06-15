@@ -11,25 +11,28 @@ const MAX_NUM_TOP_SONGS = 10;
 const DEFAULT_PLAYLIST_NAME = `'s Playlist`;
 
 export function getPlaylists(req, res) {
-  Playlist.find().sort('-dateAdded').exec((err, playlists) => {
-    if (err) {
-      return res.status(500).json({ data: {}, err });
-    }
-    res.json({ data: playlists });
-  });
+  Playlist.find()
+    .sort('-dateAdded')
+    .limit(150)
+    .exec((err, playlists) => {
+      if (err) {
+        return res.status(500).json({ data: {}, err });
+      }
+      res.json({ data: playlists });
+    });
 }
 
 export function getPlaylist(req, res) {
   const playlistId = req.params.playlistId;
-  Playlist.findById(playlistId).populate('tracks').exec((err, playlist) => {
-    console.log(playlistId);
-    console.log(err);
-    console.log(playlist);
-    if (err) {
-      return res.status(500).json({ err, data: {} });
-    }
-    return res.json({ data: playlist });
-  });
+  Playlist.findById(playlistId)
+    .populate('tracks')
+    .populate('event')
+    .exec((err, playlist) => {
+      if (err) {
+        return res.status(500).json({ err, data: {} });
+      }
+      return res.json({ data: playlist });
+    });
 }
 
 // Given a list of artist names, look up the top songs of the artist and create a new playlist for user

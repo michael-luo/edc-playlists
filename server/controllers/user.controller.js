@@ -1,7 +1,6 @@
 import * as SpotifyUtil from '../util/spotify';
 
 export function self(req, res) {
-  console.log(req.user);
   if (req.isAuthenticated() && req.user) {
     const spotifyApi = SpotifyUtil.getSpotifyApi(req.user.accessToken, req.user.refreshToken);
     spotifyApi.getMe()
