@@ -140,7 +140,7 @@ class PlaylistCreateView extends Component {
               searchPlaceholder="Search all artists and genres"
               selectRow={selectArtistRowProp(this.onArtistRowSelect)}
               pagination={true}
-              paginationSize={5}
+              paginationSize={10}
               >
               <TableHeaderColumn
                 hidden={true}
