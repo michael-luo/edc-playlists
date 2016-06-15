@@ -23,7 +23,7 @@ class Header extends Component {
           }
           {
             this.props.user && this.props.user.spotify && this.props.user.name
-              ? <div className="display-name">Michael Luo</div>
+              ? <div className="display-name">{this.props.user.name}</div>
               : <a style={{visibility: vis}} href="/api/auth/spotify" className="sign-in">Sign In</a>
           }
 

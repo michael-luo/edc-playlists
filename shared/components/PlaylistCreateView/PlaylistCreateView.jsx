@@ -139,23 +139,30 @@ class PlaylistCreateView extends Component {
               multiColumnSearch={true}
               searchPlaceholder="Search all artists and genres"
               selectRow={selectArtistRowProp(this.onArtistRowSelect)}
+              pagination={true}
+              paginationSize={5}
               >
               <TableHeaderColumn
                 hidden={true}
                 dataField="id"
-                isKey={true}>
+                isKey={true}
+                >
                 ID
               </TableHeaderColumn>
 
               <TableHeaderColumn
                 dataField="artist"
-                dataSort={true}>
+                dataSort={true}
+                filter={ { type: 'TextFilter', delay: 250 } }
+                >
                 Artist
               </TableHeaderColumn>
 
               <TableHeaderColumn
                 dataField="genres"
-                dataSort={true}>
+                dataSort={true}
+                filter={ { type: 'TextFilter', delay: 250 } }
+                >
                 Genres
               </TableHeaderColumn>
             </BootstrapTable>

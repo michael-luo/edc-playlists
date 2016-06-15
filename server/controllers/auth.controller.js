@@ -37,7 +37,7 @@ const setUpPassport = (passport) => {
         let newUser = new User({
           accessToken,
           refreshToken,
-          name: profile.displayName,
+          name: profile.displayName || profile.id,
           profileUrl: profile.profileUrl,
           photos: profile.photos,
           email: profile.emails[0].value,
