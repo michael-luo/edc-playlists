@@ -8,7 +8,7 @@ import Error from './components/Error/Error';
 const routes = (
   <Route path="/" component={App} >
     <IndexRoute component={MusicContainer} />
-    <Route path="/post/:slug" component={PlaylistDetailView} />
+    <Route path="/playlists/:playlistId" component={PlaylistDetailView} />
     <Route path="/error/:errorMsg" component={Error} />
   </Route>
 );

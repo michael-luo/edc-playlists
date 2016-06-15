@@ -9,32 +9,26 @@ class PlaylistDetailView extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.handleClick = this.handleClick.bind(this);
     this.handleLogoClick = this.handleLogoClick.bind(this);
   }
 
-  handleClick() {
-    this.setState({
-      showAddPost: true,
-    });
-  }
-
   handleLogoClick() {
-    this.props.dispatch(Actions.fetchPosts());
+    this.props.dispatch(Actions.fetchPlaylists());
+    this.context.router.push('/');
   }
 
   render() {
     return (
       <div>
-        <Helmet title={this.props.post.title} />
+        <Helmet title={this.props.playlist.name} />
 
         <Header onClick={function noop() {}} handleLogoClick={this.handleLogoClick}
-          user={this.props.user}/>
+          user={this.props.user} hideLogin={true}/>
         <div className="container">
           <div className="single-post post-detail">
-            <h3 className="post-title">{this.props.post.title}</h3>
-            <p className="author-name">By {this.props.post.name}</p>
-            <p className="post-desc">{this.props.post.content}</p>
+            <h3 className="post-title">{this.props.playlist.name}</h3>
+            <p className="author-name">By {this.props.playlist.ownerId}</p>
+            <p className="post-desc">{''}</p>
           </div>
         </div>
         <Footer />
@@ -44,7 +38,7 @@ class PlaylistDetailView extends Component {
 }
 
 PlaylistDetailView.need = [(params) => {
-  return Actions.getPostRequest.bind(null, params.slug)();
+  return Actions.getPlaylistRequest.bind(null, params.playlistId)();
 }];
 
 PlaylistDetailView.contextTypes = {
@@ -52,19 +46,12 @@ PlaylistDetailView.contextTypes = {
 };
 
 PlaylistDetailView.propTypes = {
-  post: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired,
-    cuid: PropTypes.string.isRequired,
-  }).isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(store) {
   return {
-    post: store.data.post,
+    playlist: store.playlist,
     user: store.user
   };
 }

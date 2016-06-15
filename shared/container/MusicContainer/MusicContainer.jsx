@@ -45,17 +45,15 @@ class MusicContainer extends Component {
     });
   }
 
-  createPlaylist(title, artists) {
-    this.props.dispatch(Actions.createPlaylist(title, artists));
+  createPlaylist(title, artists, eventId) {
+    this.props.dispatch(Actions.createPlaylist(title, artists, eventId));
     this.setState({
       currentView: RECENT_PLAYLISTS,
     });
   }
 
   componentDidMount() {
-    if(this.props.posts.length === 0) {
-      this.props.dispatch(Actions.fetchPosts());
-    }
+    this.props.dispatch(Actions.fetchPlaylists());
   }
 
   render() {
@@ -66,12 +64,12 @@ class MusicContainer extends Component {
         <div className="container">
           {
             this.state.currentView === CREATE_PLAYLIST
-            ? <PlaylistCreateView createPlaylist={this.createPlaylist} events={this.props.events}/>
+            ? <PlaylistCreateView createPlaylist={this.createPlaylist} events={this.props.events} user={this.props.user} />
             : null
           }
           {
             this.state.currentView === RECENT_PLAYLISTS
-            ? <PlaylistListView posts={this.props.posts}/>
+            ? <PlaylistListView playlists={this.props.playlist.playlists}/>
             : null
           }
         </div>
@@ -82,7 +80,7 @@ class MusicContainer extends Component {
 }
 
 MusicContainer.needs = [
-  () => { return Actions.fetchPosts(); }
+  () => { return Actions.fetchPlaylists(); }
 ];
 
 MusicContainer.contextTypes = {
@@ -91,18 +89,19 @@ MusicContainer.contextTypes = {
 
 function mapStateToProps(store) {
   return {
-    posts: store.data.posts,
+    // posts: store.data.posts,
     user: store.user,
     events: store.events,
+    playlist: store.playlist,
   };
 }
 
 MusicContainer.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-  })).isRequired,
+  // posts: PropTypes.arrayOf(PropTypes.shape({
+  //   name: PropTypes.string.isRequired,
+  //   title: PropTypes.string.isRequired,
+  //   content: PropTypes.string.isRequired,
+  // })).isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 

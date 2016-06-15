@@ -5,8 +5,11 @@
  * redirected to the login page.
  */
 export function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated() && req.user && req.user.accessToken) {
+  if (req.isAuthenticated() && req.user) {
+    const accessToken = req.user.accessToken;
+    const refreshToken = req.user.refreshToken;
     return next();
+  } else {
+    return res.redirect('/');
   }
-  res.redirect('/');
 }

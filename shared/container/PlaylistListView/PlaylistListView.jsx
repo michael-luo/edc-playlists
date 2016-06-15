@@ -1,37 +1,53 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import PlaylistItem from '../../components/PlaylistItem/PlaylistItem';
 import { connect } from 'react-redux';
+import Infinite from 'react-infinite';
 import * as Actions from '../../redux/actions/actions';
+import _ from 'underscore';
 
-function PlaylistListView(props) {
-  return (
-    <div className="listView">
-      {
-        props.posts.map((post, i) => (
-          <PlaylistItem post={post} key={i}
-          onClick={function handleClick() {
-            props.dispatch(Actions.addSelectedPost(post));
-          }}
-          onDelete={function handleDelete() {
-            if (confirm('Do you want to delete this post')) { // eslint-disable-line
-              props.dispatch(Actions.deletePostRequest(post));
+class PlaylistListView extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {};
+    this.state.height = 440;
+  }
+
+  componentDidMount() {
+    if (window) {
+      this.setState({
+        height: window.innerHeight
+      });
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <h2 className="page-header discover-header">Latest Festival Playlists</h2>
+        <div className="listView">
+          <Infinite containerHeight={this.state.height} elementHeight={40}>
+            {
+              _.map(this.props.playlists, (playlist, i) => {
+                return (
+                <PlaylistItem playlist={playlist} key={i}
+                  onClick={function handleClick() {
+                    this.props.dispatch(Actions.addSelectedPlaylist(playlist));
+                  }}
+                />
+              )})
             }
-          }}
-        />
-        ))
-      }
-    </div>
-  );
+          </Infinite>
+        </div>
+      </div>
+    );
+  }
 }
 
+PlaylistListView.contextTypes = {
+  router: React.PropTypes.object,
+};
+
 PlaylistListView.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired,
-    cuid: PropTypes.string.isRequired,
-  })).isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 

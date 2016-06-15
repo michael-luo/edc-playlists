@@ -63,9 +63,21 @@ const events = (state = [], action) => {
   }
 };
 
-const playlist = (state = {}, action) => {
+const playlistInitialState = { playlists: [], playlist: null };
+
+const playlist = (state = playlistInitialState, action) => {
   switch (action.type) {
     case ActionTypes.ADD_PLAYLIST:
+      return {
+        playlists: [action.playlist, ...state.playlists],
+        playlist: state.playlist
+      };
+    case ActionTypes.ADD_PLAYLISTS:
+      return {
+        playlists: action.playlists,
+        playlist: state.playlist
+      };
+    case ActionTypes.ADD_SELECTED_PLAYLIST:
       return action.playlist;
     default:
       return state;

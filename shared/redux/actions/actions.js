@@ -60,6 +60,42 @@ export function getPostRequest(post) {
   };
 }
 
+export function addSelectedPlaylist(playlist) {
+  return {
+    type: ActionTypes.ADD_SELECTED_PLAYLIST,
+    playlist,
+  };
+}
+
+export function getPlaylistRequest(playlistId) {
+  return (dispatch) => {
+    return fetch(`${baseURL}/api/playlists/${playlistId}`, {
+      method: 'get',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+      credentials: 'include',
+    }).then((response) => response.json()).then(res => {
+      dispatch(addSelectedPlaylist(res.data))
+    });
+  };
+}
+
+export function addPlaylists(playlists) {
+  return {
+    type: ActionTypes.ADD_PLAYLISTS,
+    playlists
+  }
+}
+
+export function fetchPlaylists() {
+  return (dispatch) => {
+    return fetch(`${baseURL}/api/playlists`)
+      .then((response) => response.json())
+      .then((response) => dispatch(addPlaylists(response.data)));
+  }
+}
+
 export function deletePost(post) {
   return {
     type: ActionTypes.DELETE_POST,
@@ -126,7 +162,14 @@ export function fetchMusicEvents() {
   }
 }
 
-export function createPlaylist(title, artists) {
+export function createPlaylist(title, artists, eventId) {
+  if (!title || title === '' || !artists || artists.length === 0 || !eventId) {
+    return (dispatch) => {
+      console.log('invalid playlist params');
+      dispatch({ type: 'FAILED_CREATE_PLAYLIST' });
+    }
+  }
+
   // Build artist IDs from artists objects
   let artistIds = [];
   for (const artist of artists) {
@@ -137,7 +180,9 @@ export function createPlaylist(title, artists) {
     fetch(`${baseURL}/api/playlists`, {
       method: 'post',
       body: JSON.stringify({
-        artists: artistIds
+        artists: artistIds,
+        playlistName: title,
+        eventId,
       }),
       headers: new Headers({
         'Content-Type': 'application/json',

@@ -234,6 +234,13 @@ body {
   float: right;
 }
 
+.discover-header {
+  padding-left: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #757575;
+}
 
 /**
  * React Select

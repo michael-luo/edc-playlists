@@ -7,6 +7,7 @@ class Header extends Component {
   }
 
   render() {
+    const vis = (this.props.hideLogin) ? 'hidden' : 'visible';
     return (
       <div className="header">
         <div className="header-content">
@@ -23,7 +24,7 @@ class Header extends Component {
           {
             this.props.user && this.props.user.spotify && this.props.user.name
               ? <div className="display-name">Michael Luo</div>
-              : <a href="/api/auth/spotify" className="sign-in">Sign In</a>
+              : <a style={{visibility: vis}} href="/api/auth/spotify" className="sign-in">Sign In</a>
           }
 
         </div>

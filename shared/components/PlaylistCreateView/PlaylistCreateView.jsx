@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { WithContext as ReactTags } from 'react-tag-input';
+import InputRange from 'react-input-range';
 import _ from 'underscore';
 
 function _getFormattedEventName(event) {
@@ -67,8 +68,12 @@ class PlaylistCreateView extends Component {
   }
 
   createPlaylist() {
+    if (_.isEmpty(this.props.user)) {
+      window.location.href= '/api/auth/spotify';
+    }
+
     const titleRef = this.refs.playlistTitle;
-    this.props.createPlaylist(titleRef.value, this.state.selectedArtists);
+    this.props.createPlaylist(titleRef.value, this.state.selectedArtists, this.state.currentEvent);
     this.state.selectedArtists = [];
   }
 
@@ -115,6 +120,7 @@ class PlaylistCreateView extends Component {
   render() {
     return (
       <div>
+        {this.props.history}
         <div className='form appear'>
           <div className="form-content">
             <h2 className="form-title">Create New Playlist</h2>
@@ -162,10 +168,6 @@ class PlaylistCreateView extends Component {
             />
 
             <input defaultValue={_getFormattedEventName(this.props.events[0])} placeholder="Name Your Playlist" className="form-control form-field" ref="playlistTitle"/>
-
-            <input placeholder="Artist's Name" className="form-control form-field" ref="name"/>
-            <input placeholder="Playlist Title" className="form-control form-field" ref="title"/>
-            <textarea placeholder="Playlist Tracks" className="form-control form-field" ref="content"></textarea>
             <a className="post-submit-button align-right" href="#" onClick={this.createPlaylist}>Generate</a>
           </div>
         </div>
