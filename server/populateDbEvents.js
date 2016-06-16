@@ -12,8 +12,36 @@ import serverConfig from './config';
 // For JSON validation of the eventData.js
 const v = eventData.validator;
 
-const seedEventData = eventData.data;
+let seedEventData;
+if (process.env.NODE_ENV === 'production') {
+  seedEventData = eventData.data;
+} else {
+  seedEventData = eventData.devoData;
+}
+
 let spotifyApi;
+
+class RequestDelay {
+  constructor(maxBatchSize = 5, delay = 1000) {
+    this.maxBatchSize = maxBatchSize;
+    this.delay = delay;
+    this.currBatchSize = 0;
+    this.currDelay = 0;
+  }
+
+  get nextDelay() {
+    return this.calcNextDelay();
+  }
+
+  calcNextDelay() {
+    this.currBatchSize = this.currBatchSize + 1;
+    if (this.currBatchSize > this.maxBatchSize) {
+      this.currDelay = this.currDelay + this.delay;
+      this.currBatchSize = 0;
+    }
+    return this.currDelay;
+  }
+}
 
 export default function() {
   // Initialize the client
@@ -94,18 +122,34 @@ function _populate(data) {
 
   // Convert a list of string names to models in the DB
   const savedArtistModelsPromise = _processArtistListIntoDatabase(artistArray);
-  _processMusicEvents(events, savedArtistModelsPromise);
+  _processMusicEvents(events, savedArtistModelsPromise, artistArray);
 }
 
 // Modify the artists list of each event before saving it
-function _processMusicEvents(events, savedArtistModelsPromise) {
+function _processMusicEvents(events, savedArtistModelsPromise, artistArray) {
   savedArtistModelsPromise
     .then((savedArtistModels) => {
+      const savedArtistModelNames = _extractArtistNames(savedArtistModels);
       console.log(`Successfully saved ${savedArtistModels.length} artists to DB
-        - [${_extractArtistNames(savedArtistModels)}]`);
+        - [${savedArtistModelNames}]`);
+      console.log(`Failed to save these artists: ${_getDifference(artistArray, savedArtistModelNames)}`);
       _replaceEventsArtistsWithObjectId(events, savedArtistModels);
       _saveEvents(events);
     });
+}
+
+function _getDifference(artistArray, finalArtists) {
+  finalArtists = _.map(finalArtists, (finalArtist) => {
+    return finalArtist.toLowerCase();
+  });
+  const finalArtistSet = new Set(finalArtists);
+  const diff = [];
+  for (const a of artistArray) {
+    if (!finalArtistSet.has(a.toLowerCase())) {
+      diff.push(a);
+    }
+  }
+  return diff;
 }
 
 // Save the event to the database;
@@ -229,20 +273,26 @@ function _convertArtistsToSavedModelsPromises(spotifyArtists) {
 
 // Create promises to retrieve all artist search results
 function _getArtistPromises(artistNames) {
+  let rd = new RequestDelay();
   const spotifyArtistPromises = [];
   for (const artist of artistNames) {
-    spotifyArtistPromises.push(_getArtistPromise(artist));
+    spotifyArtistPromises.push(_getArtistPromise(artist, rd));
   }
   return spotifyArtistPromises;
 }
 
 // Create promise to retrieve an artist search result
-function _getArtistPromise(artistName) {
+function _getArtistPromise(artistName, rd) {
   if (typeof(artistName) !== 'string') {
     console.error(`Attempted to call _populateArtist with: ${artistName}`);
     return Promises.resolve({});
   }
-  return spotifyApi.searchArtists(artistName);
+
+  return ((del) => new Promises((resolve, reject) => {
+    setTimeout(() => {
+      resolve(spotifyApi.searchArtists(artistName));
+    }, del);
+  }))(rd.nextDelay);
 }
 
 // Spotify returns multiple artists for a given search
