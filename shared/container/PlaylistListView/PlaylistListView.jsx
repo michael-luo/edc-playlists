@@ -1,45 +1,49 @@
 import React, { Component, PropTypes } from 'react';
 import PlaylistItem from '../../components/PlaylistItem/PlaylistItem';
 import { connect } from 'react-redux';
-import Infinite from 'react-infinite';
 import * as Actions from '../../redux/actions/actions';
 import _ from 'underscore';
+import Infinite from 'react-infinite';
 
 class PlaylistListView extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {};
-    this.state.height = 440;
+    this.state.mounted = false;
   }
 
   componentDidMount() {
     if (window) {
       this.setState({
-        height: window.innerHeight
+        mounted: true
       });
     }
   }
 
   render() {
-    return (
-      <div>
-        <h2 className="page-header discover-header">Latest Festival Playlists</h2>
-        <div className="listView">
-          <Infinite containerHeight={this.state.height} elementHeight={40}>
-            {
-              _.map(this.props.playlists, (playlist, i) => {
-                return (
-                <PlaylistItem playlist={playlist} key={i}
-                  onClick={function handleClick() {
-                    this.props.dispatch(Actions.addSelectedPlaylist(playlist));
-                  }}
-                />
-              )})
-            }
-          </Infinite>
+    if (this.state.mounted) {
+      return (
+        <div>
+          <h2 className="page-header discover-header">Latest Festival Playlists</h2>
+          <div className="listView">
+            <Infinite containerHeight={560} elementHeight={40} useWindowAsScrollContainer>
+              {
+                _.map(this.props.playlists, (playlist, i) => {
+                  return (
+                  <PlaylistItem playlist={playlist} key={i}
+                    onClick={function handleClick() {
+                      this.props.dispatch(Actions.addSelectedPlaylist(playlist));
+                    }}
+                  />
+                )})
+              }
+            </Infinite>
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return (<div></div>)
+    }
   }
 }
 

@@ -5,6 +5,7 @@ import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { connect } from 'react-redux';
 import * as Actions from '../../redux/actions/actions';
+import _ from 'underscore';
 
 const RECENT_PLAYLISTS = 'recentPlaylists';
 const CREATE_PLAYLIST = 'createPlaylist';
@@ -23,6 +24,11 @@ class MusicContainer extends Component {
   }
 
   handleClick(e) {
+    if (_.isEmpty(this.props.user)) {
+      window.location.href = '/api/auth/spotify';
+      return;
+    }
+
     switch (this.state.currentView) {
       case RECENT_PLAYLISTS:
         this.setState({
