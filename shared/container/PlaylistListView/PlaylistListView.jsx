@@ -26,7 +26,7 @@ class PlaylistListView extends Component {
         <div>
           <h2 className="page-header discover-header">Latest Festival Playlists</h2>
           <div className="listView">
-            <Infinite containerHeight={560} elementHeight={40} useWindowAsScrollContainer>
+            <Infinite containerHeight={621} elementHeight={207} useWindowAsScrollContainer>
               {
                 _.map(this.props.playlists, (playlist, i) => {
                   return (
