@@ -13,7 +13,7 @@ const DEFAULT_PLAYLIST_NAME = `'s Playlist`;
 export function getPlaylists(req, res) {
   Playlist.find()
     .sort('-dateAdded')
-    .limit(150)
+    .limit(50)
     .exec((err, playlists) => {
       if (err) {
         return res.status(500).json({ data: {}, err });
