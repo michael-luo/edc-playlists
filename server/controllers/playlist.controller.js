@@ -6,7 +6,7 @@ import Promises from 'bluebird';
 import _ from 'underscore';
 
 const MAX_NUM_ARTISTS_PER_MUSIC_EVENT = 280; // i.e. EDC does not have more than this many artists
-const DEFAULT_NUM_TOP_SONGS = 2;
+const DEFAULT_NUM_TOP_SONGS = 1;
 const MAX_NUM_TOP_SONGS = 10;
 const DEFAULT_PLAYLIST_NAME = `'s Playlist`;
 

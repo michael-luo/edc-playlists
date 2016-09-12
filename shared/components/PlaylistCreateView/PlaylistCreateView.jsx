@@ -123,7 +123,7 @@ class PlaylistCreateView extends Component {
         {this.props.history}
         <div className='form appear'>
           <div className="form-content">
-            <h2 className="form-title">Create New Playlist</h2>
+            <h2 className="form-title">Create New Playlist <em>(based on selected artists' top song)</em></h2>
 
             <Select
               name="event-name"
