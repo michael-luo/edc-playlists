@@ -31,9 +31,7 @@ function PlaylistItem(props) {
   return (
     <div className="single-post">
       <h3 className="post-title ">
-        <Link to={`/playlists/${playlistId}`} onClick={props.onClick}>
-          {playlistName}
-        </Link>
+        <a href={href}><strong>{playlistName}</strong></a>
       </h3>
       <p className="author-name">By {playlistOwnerId}</p>
       <p className="post-desc">{numTracks}</p>
