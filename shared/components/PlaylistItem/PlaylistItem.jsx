@@ -37,7 +37,7 @@ function PlaylistItem(props) {
       </h3>
       <p className="author-name">By {playlistOwnerId}</p>
       <p className="post-desc">{numTracks}</p>
-      <p className="post-action"><a href={href}>Play on Spotify</a></p>
+      <p className="post-action"><a href={href}><strong>Play on Spotify</strong></a></p>
       <hr className="divider"/>
     </div>
   );

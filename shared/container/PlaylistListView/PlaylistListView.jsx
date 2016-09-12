@@ -24,7 +24,7 @@ class PlaylistListView extends Component {
     if (this.state.mounted) {
       return (
         <div>
-          <h2 className="page-header discover-header">Latest Festival Playlists</h2>
+          <h2 className="page-header discover-header">Latest Festival Playlists Generated</h2>
           <div className="listView">
             <Infinite containerHeight={621} elementHeight={207} useWindowAsScrollContainer>
               {

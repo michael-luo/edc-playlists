@@ -18,7 +18,7 @@ class Header extends Component {
           </span>
           {
             this.context.router.isActive('/', true)
-              ? <span className="add-post-button" href="#" onClick={this.props.onClick}>+ Playlist</span>
+              ? <span className="add-post-button" href="#" onClick={this.props.onClick}>Generate Playlist</span>
               : null
           }
           {
